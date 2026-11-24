@@ -451,7 +451,7 @@ h1.hst em{font-family:var(--serif);font-size:1.25em;color:var(--lav);line-height
 .lrow::before{content:"";position:absolute;inset:0;background:var(--lav);transform:translateY(101%);transition:transform .7s var(--snap)}
 .lrow:hover::before,.lrow:focus-visible::before{transform:none}
 .lrow>*{position:relative;transition:color .4s,transform .7s var(--ease)}
-.lrow:hover>*{color:#0A0A0C}
+.lrow:hover>*,.lrow:hover .rt,.lrow:hover .rt *{color:#0A0A0C}.lrow:hover .ar2{border-color:#0A0A0C}
 .lrow:hover .lb{transform:translateX(18px)}
 .lrow .lb{font-family:var(--serif);font-size:clamp(44px,6.4vw,104px);line-height:1.02;letter-spacing:-.02em}
 .lrow:hover .lb{font-style:italic}
@@ -696,7 +696,7 @@ footer{padding:48px 0 28px;overflow:hidden}
   <div class="wrap">
     <div data-rv><h2>Got something tangled?<br><em>Let’s make it obvious.</em></h2><p class="sub">Hiring for UX/UI or product design? I’d love to hear what you’re building.</p></div>
     <div class="lrows" data-rv>
-      <button class="lrow" type="button" id="copyMail"><span class="lb">Email</span><span class="rt"><span>basimnaduthodi27@gmail.com · click to copy</span><span class="ar2">↗</span></span></button>
+      <a class="lrow" href="mailto:basimuiux@gmail.com?subject=Hi%20Basim" id="mailRow"><span class="lb">Email</span><span class="rt"><span>basimuiux@gmail.com · write to me</span><span class="ar2">↗</span></span></a>
       <a class="lrow" href="https://www.linkedin.com/in/basimnaduthodiuiux/"><span class="lb">LinkedIn</span><span class="rt"><span>Say hi, connect</span><span class="ar2">↗</span></span></a>
       <a class="lrow" href="https://www.behance.net/basimnaduthodi1"><span class="lb">Behance</span><span class="rt"><span>More visual work</span><span class="ar2">↗</span></span></a>
       <a class="lrow" href="https://drive.google.com/file/d/1H3-Zq8SdsCEdpGX5Ot8L-fNZGDdkgBL3/view?usp=drivesdk"><span class="lb">Resume</span><span class="rt"><span>View the PDF</span><span class="ar2">↗</span></span></a>
@@ -729,7 +729,7 @@ footer{padding:48px 0 28px;overflow:hidden}
 {
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const EMAIL='basimnaduthodi27@gmail.com',I='img/';
+const EMAIL='basimuiux@gmail.com',I='img/';
 const g=(p,k,c)=>[I+p+'-'+k+'.jpg',c];
 const P=[
 {id:'finbee',name:'Finbee',ind:'Fintech',plat:'Mobile banking app',time:'1–2 weeks',client:'Finbee',img:I+'finbee.jpg',wide:I+'finbee-wide.jpg',feat:true,
@@ -973,7 +973,7 @@ addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(o
 
 const tick=()=>{try{$('#clock2').textContent=new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit'})}catch(e){}};tick();setInterval(tick,20000);
 const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2400)};
-$('#copyMail').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(EMAIL);toast('Email copied — talk soon')}catch(e){toast(EMAIL)}});
+
 
 /* AI chat */
 const chat=$('#chat'),clog=$('#clog');let sample=null,history=[],busy=false;
@@ -981,7 +981,7 @@ const chat=$('#chat'),clog=$('#clog');let sample=null,history=[],busy=false;
 function openChat(){chat.classList.add('open');chat.setAttribute('aria-hidden','false');if(!clog.children.length)bubble('assistant',"Hi! I'm Basim's AI. Ask me about his projects, skills, process or availability — that's all I know about, promise.");setTimeout(()=>$('#cq').focus({preventScroll:true}),450)}
 function closeChat(){chat.classList.remove('open');chat.setAttribute('aria-hidden','true')}
 $$('[data-open-chat]').forEach(b=>b.addEventListener('click',openChat));$('#chatClose').onclick=closeChat;
-$('#chips').innerHTML=['What is finnAI in Finbee?','Is Basim open to roles?','Which project uses AI?','Which project is most data-heavy?','How can I contact him?'].map(c=>`<button type="button">${c}</button>`).join('');
+$('#chips').innerHTML=['Is Basim open to roles?','Which project uses AI?'].map(c=>`<button type="button">${c}</button>`).join('');
 $('#chips').addEventListener('click',e=>{const b=e.target.closest('button');if(b)ask(b.textContent)});
 function bubble(role,text){const d=document.createElement('div');d.className='msg '+(role==='user'?'u':'a');d.textContent=text;clog.appendChild(d);clog.scrollTop=clog.scrollHeight;return d}
 $('#cform').addEventListener('submit',e=>{e.preventDefault();const q=$('#cq').value.trim();if(q){$('#cq').value='';ask(q)}});
@@ -1008,7 +1008,7 @@ function local(q){const s=q.toLowerCase();
   if(/project|work|case|portfolio/.test(s))return 'Six case studies: Finbee (fintech app), Folio (trading platform), EduFlow (learning app), Travelspire (travel app), Streamly (streaming) and Zoechem (brand identity). Which one interests you?';
   if(/^(hi|hey|hello|yo)\b/.test(s))return "Hey! Ask me about Basim's projects, process, skills or availability.";
   return "I only answer questions about Basim, his projects and this site. Try “What is finnAI in Finbee?” or “Is Basim open to roles?”"}
-async function ask(q){if(busy)return;busy=true;bubble('user',q);const out=bubble('assistant','');out.classList.add('typing');history.push({role:'user',content:q});
+async function ask(q){if(busy)return;busy=true;$('#chips').style.display='none';bubble('user',q);const out=bubble('assistant','');out.classList.add('typing');history.push({role:'user',content:q});
   const convo=history.slice(-8).map(m=>(m.role==='user'?'Visitor: ':'Assistant: ')+m.content).join('\n');let answer='';
   if(sample){try{const r=await sample(`${RULES}\n\nCONVERSATION SO FAR:\n${convo}\n\nReply as Basim's AI to the visitor's last message.`,{cache:false,modelTier:'quick',onText:({text})=>{if(text&&text!=='Thinking...'){out.textContent=text;clog.scrollTop=clog.scrollHeight}}});answer=(r&&r.text)||out.textContent}catch(err){if(err&&err.code==='not_granted')sample=null;answer=local(q)}}
   else{try{const ac=new AbortController();setTimeout(()=>ac.abort(),25000);const r=await fetch('/api/chat',{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history.slice(-8)})});
