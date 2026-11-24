@@ -1011,7 +1011,7 @@ function local(q){const s=q.toLowerCase();
 async function ask(q){if(busy)return;busy=true;bubble('user',q);const out=bubble('assistant','');out.classList.add('typing');history.push({role:'user',content:q});
   const convo=history.slice(-8).map(m=>(m.role==='user'?'Visitor: ':'Assistant: ')+m.content).join('\n');let answer='';
   if(sample){try{const r=await sample(`${RULES}\n\nCONVERSATION SO FAR:\n${convo}\n\nReply as Basim's AI to the visitor's last message.`,{cache:false,modelTier:'quick',onText:({text})=>{if(text&&text!=='Thinking...'){out.textContent=text;clog.scrollTop=clog.scrollHeight}}});answer=(r&&r.text)||out.textContent}catch(err){if(err&&err.code==='not_granted')sample=null;answer=local(q)}}
-  else{try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history.slice(-8)})});
+  else{try{const ac=new AbortController();setTimeout(()=>ac.abort(),25000);const r=await fetch('/api/chat',{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history.slice(-8)})});
       if(!r.ok)throw new Error('http '+r.status);const j=await r.json();answer=(j&&j.text)||''}catch(e){await new Promise(r=>setTimeout(r,300));answer=local(q)}}
   if(!answer)answer=local(q);out.classList.remove('typing');out.textContent=answer;history.push({role:'assistant',content:answer});clog.scrollTop=clog.scrollHeight;busy=false}
 }
