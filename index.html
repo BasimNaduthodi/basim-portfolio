@@ -940,11 +940,11 @@ const hz=m=>440*Math.pow(2,(m-69)/12);
 const CH=[[53,57,60,64],[52,55,59,62],[50,53,57,60],[48,52,55,59]];
 function startLofi(){try{AC2=AC2||new (window.AudioContext||window.webkitAudioContext)();AC2.resume()}catch(e){return}
   if(!noiseBuf){noiseBuf=AC2.createBuffer(1,AC2.sampleRate*.5,AC2.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
-  const lp=AC2.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2200;mst=AC2.createGain();mst.gain.value=0;mst.connect(lp);lp.connect(AC2.destination);
-  mst.gain.linearRampToValueAtTime(.16,AC2.currentTime+1.2);
+  const lp=AC2.createBiquadFilter();lp.type='lowpass';lp.frequency.value=4200;mst=AC2.createGain();mst.gain.value=0;const cmp=AC2.createDynamicsCompressor();cmp.threshold.value=-14;cmp.ratio.value=4;mst.connect(lp);lp.connect(cmp);cmp.connect(AC2.destination);
+  mst.gain.linearRampToValueAtTime(.6,AC2.currentTime+1.2);
   const beat=60/74;let bar=0,next=AC2.currentTime+.1;
   const sched=()=>{while(next<AC2.currentTime+1.2){const c=CH[bar%4];
-      c.forEach((m,k)=>note(next+k*.012,hz(m),beat*3.6,.07));note(next,hz(c[0]-12),beat*1.8,.16,'sine');note(next+beat*2,hz(c[0]-12),beat*1.6,.12,'sine');
+      c.forEach((m,k)=>note(next+k*.012,hz(m),beat*3.6,.07));note(next,hz(c[0]-12),beat*1.8,.16,'triangle');note(next+beat*2,hz(c[0]-12),beat*1.6,.12,'triangle');
       kick(next);kick(next+beat*2.5);[0,1,2,3,4,5,6,7].forEach(e=>hat(next+e*beat/2+(e%2?beat*.08:0),e%2?.025:.04));
       for(let e=0;e<8;e++)if(Math.random()<.42)note(next+e*beat/2,hz(c[(e+bar)%4]+12),beat*.9,.05,'sine');
       next+=beat*4;bar++}};
