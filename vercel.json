@@ -1,4 +1,6 @@
 {
+  "regions": ["bom1"],
+  "functions": { "api/chat.js": { "maxDuration": 30 } },
   "headers": [
     { "source": "/img/(.*)", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] }
   ]
